@@ -1,0 +1,5 @@
+,MAE (Points),R² Score,Spearman Correlation,Rank MAE,Training Time (s)
+Linear Regression,41.4,0.572,0.7536,75.2,0.0
+Random Forest,40.48,0.571,0.7528,74.9,3.0
+XGBoost,41.77,0.545,0.732,78.1,0.8
+Gradient Boosting,41.6,0.554,0.7296,78.5,17.8
