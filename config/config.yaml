@@ -34,10 +34,10 @@ model:
 
 # Data configurations
 data:
-  # Raw data paths
-  raw_data_dir: "data/raw"
-  processed_data_dir: "data/processed"
-  external_data_dir: "data/external"
+  # Data directory paths
+  raw_data_dir: "data/raw"        # Original, unmodified data
+  processed_data_dir: "data/processed"  # Cleaned fantasy data (CSV files)
+  external_data_dir: "data/external"    # External sources (ESPN rankings)
   
   # Training parameters
   test_size: 0.2

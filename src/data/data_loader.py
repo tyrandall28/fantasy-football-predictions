@@ -30,7 +30,7 @@ class FantasyDataLoader:
             config: Configuration dictionary. If None, loads default config.
         """
         self.config = get_data_config(config)
-        self.data_dir = Path(self.config['raw_data_dir'])
+        self.data_dir = Path(self.config['processed_data_dir'])
         
     def load_seasons_data(self, seasons: List[int] = None) -> pd.DataFrame:
         """
