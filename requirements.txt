@@ -1,8 +1,23 @@
-pandas
-scikit-learn
-numpy
-joblib
-scipy
-xgboost
-matplotlib
-seaborn 
+# Core ML and Data Science
+pandas>=1.5.0
+numpy>=1.21.0
+scikit-learn>=1.1.0
+scipy>=1.9.0
+
+# Advanced ML Models
+xgboost>=1.6.0
+
+# Visualization
+matplotlib>=3.5.0
+seaborn>=0.11.0
+
+# Configuration and Utilities
+PyYAML>=6.0
+pathlib2>=2.3.0
+
+# Optional: Enhanced model persistence
+joblib>=1.1.0
+
+# Development and Testing (optional)
+pytest>=7.0.0
+black>=22.0.0 

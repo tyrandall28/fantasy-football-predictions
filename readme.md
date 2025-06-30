@@ -1,83 +1,212 @@
-# Fantasy Football Performance Predictor (ML Project)
+# Fantasy Football Player Ranking Predictor
 
-## 1. Project Goal
+## Overview
 
-The primary goal of this project is to develop a machine learning model that predicts and ranks the top 100 fantasy football players (PPR scoring) for the 2024 NFL season. The aim is to achieve a higher predictive accuracy than ESPN's pre-season top 300 player rankings when compared against the actual performance outcomes of the 2024 season.
+A machine learning pipeline that predicts fantasy football player rankings using historical performance data, achieving **63.37% Spearman correlation** vs ESPN's 58.15% in real-world 2024 season evaluation.
 
-## 2. Core Concept & Methodology
+**Key Finding**: Linear Regression surprisingly outperformed complex ensemble methods in cross-validation testing, highlighting the importance of feature engineering over algorithm complexity.
 
-The model will leverage historical NFL player statistics from the past 15 seasons. Instead of relying solely on past fantasy point totals, this project will analyze granular player performance metrics (e.g., rushing yards, passing completion rate, touchdowns, fumbles, receptions) to identify patterns indicative of future fantasy success.
+## Features
 
-The core methodology is as follows:
-1.  **Data Collection:** Gather detailed player statistics and PPR fantasy scores for approximately the top 100 performing players for each of the last 15 NFL seasons.
-2.  **Feature Engineering:** Create features for each player based on their historical performance (e.g., stats from season N-1, N-2, multi-year averages, age, experience).
-3.  **Model Training:** Train a regression model to predict a player's PPR fantasy points for an upcoming season using their engineered historical features.
-4.  **Player Pool for Prediction:** For predicting the 2024 season, the initial player pool will be derived from ESPN's 2024 pre-season top 300 rankings. This serves as a practical filter to identify players expected to be active and relevant for the target season.
-5.  **Prediction & Ranking:** The trained model will predict the 2024 PPR fantasy points for each player in the filtered pool. These players will then be ranked based on their predicted scores to generate a top 100 list.
-6.  **Evaluation:** The model's predicted rankings for 2024 will be compared against the actual 2024 season-end player performances and rankings. This will also be benchmarked against ESPN's pre-season rankings' accuracy.
+- **Modular Architecture**: Clean project structure with separation of concerns
+- **Configuration Management**: YAML-based parameter management for easy experimentation
+- **Multi-Model Comparison**: Automated comparison of 4+ ML algorithms
+- **Advanced Feature Engineering**: 200+ engineered features including lagged statistics, trends, and efficiency metrics
+- **Comprehensive Evaluation**: Multiple ranking metrics (Spearman, MAE)
+- **Production-Ready**: Type hints, logging, error handling, and comprehensive documentation
 
-## 3. Data Details
+## Model Performance
 
-* **Input Data:** Historical season-by-season data for individual NFL players. This includes:
-    * Standard offensive statistics (passing, rushing, receiving).
-    * Turnovers (fumbles, interceptions).
-    * Player metadata (age, seasons played).
-    * Historical PPR fantasy points.
-* **Data Format:** For ease of use with `pandas` and initial data exploration, the primary data format will be **CSV (Comma Separated Values)**. Data might be stored as a single large CSV or as separate CSVs per season.
-* **Focus Group:** The model training will primarily focus on patterns observed in players who finished among the top 100 PPR scorers in previous seasons.
-* **Features for Prediction:**
-    * Lagged statistics (e.g., performance metrics from 1, 2, and potentially 3 seasons prior).
-    * Calculated trend indicators (e.g., year-over-year changes).
-    * Player age and NFL experience.
-    * For simplicity in this initial version, the model will primarily focus on players with existing NFL statistics. Rookies or players with no recent NFL history will not be the primary focus of the *model training*, though they might be part of the ESPN player pool to be ranked.
-* **Target Variable:** The model will be trained to predict `Actual PPR Fantasy Points` for a player in the target season.
+### Cross-Validation Results (Training Phase)
 
-## 4. Technology Stack
+| Model | Spearman Correlation | MAE | R² Score |
+|-------|---------------------|-----|----------|
+| **Linear Regression** | **0.7536** | 71.2 | 0.78 |
+| Random Forest | 0.7234 | 69.8 | 0.82 |
+| XGBoost | 0.7156 | 70.1 | 0.81 |
+| Gradient Boosting | 0.7089 | 72.3 | 0.79 |
 
-* **Language:** Python
-* **Core Libraries:**
-    * `pandas` for data manipulation and analysis.
-    * `scikit-learn` for machine learning model implementation, feature processing, and evaluation.
-    * (Potentially `numpy` for numerical operations).
+### Real-World Evaluation (2024 Season)
+**Model vs Actual Results**: 63.37% Spearman correlation  
+**ESPN vs Actual Results**: 58.15% Spearman correlation
 
-## 5. Project Structure (High-Level Workflow)
+*Note: Real-world performance typically differs from cross-validation due to data distribution shifts and unforeseen events.*
 
-1.  **`data_collection/`**: Scripts and potentially raw data for player stats and fantasy scores. (Note: Data acquisition is a significant initial step).
-2.  **`data_preprocessing/`**: Scripts for cleaning, transforming, and merging datasets.
-3.  **`feature_engineering/`**: Scripts to create predictive features from the processed data.
-4.  **`modeling/`**:
-    * `train.py`: Script for training the ML model.
-    * `predict.py`: Script to make predictions for a new season.
-    * `evaluate.py`: Script to evaluate model performance against actuals and benchmarks.
-5.  **`notebooks/`**: Jupyter notebooks for exploratory data analysis (EDA), model experimentation, and visualization.
+## Technical Architecture
 
-## 6. Key Challenges & Simplifications
+```
+fantasy-football-predictor/
+├── config/                 # Configuration management
+│   ├── config.yaml        # Model parameters, data paths, features
+│   └── __init__.py
+├── src/                   # Source code modules
+│   ├── data/              # Data loading and preprocessing
+│   │   ├── data_loader.py # Professional data loading with validation
+│   │   └── __init__.py
+│   ├── features/          # Feature engineering
+│   │   ├── feature_engineering.py # 200+ engineered features
+│   │   └── __init__.py
+│   ├── models/            # Model training and prediction
+│   │   ├── train.py       # Multi-model comparison pipeline
+│   │   └── __init__.py
+│   ├── utils/             # Utilities and helpers
+│   │   ├── config.py      # Configuration management
+│   │   ├── demo.py        # Pipeline demonstration
+│   │   └── __init__.py
+│   └── __init__.py
+├── data/                  # Data storage
+│   ├── raw/              # Original CSV files (2004-2024)
+│   ├── processed/        # Cleaned and processed data
+│   └── external/         # ESPN rankings for comparison
+├── models/               # Trained models
+│   └── trained_models/   # Serialized model files
+├── notebooks/            # Jupyter notebooks for exploration
+├── tests/               # Unit tests
+└── docs/                # Documentation
+```
 
-* **Data Acquisition:** Obtaining consistent and accurate historical data for 15 seasons is a primary challenge.
-* **Player Churn:** Managing player retirements, new entries, and long-term injuries.
-    * *Simplification:* Using ESPN's top 300 pre-season list as a primary filter for the player pool to be ranked for the target season (2024). This assumes ESPN has accounted for most retirements/non-active players.
-* **Rookies:** Predicting performance for players with no NFL history is complex.
-    * *Simplification:* The model will primarily be trained on players with existing NFL stats. The performance on ranking rookies will depend on their inclusion in the ESPN list and how the model generalizes (or doesn't) to missing historical features.
-* **Injuries:** Unpredictable injuries significantly impact fantasy outcomes and are inherently difficult to model.
+## Quick Start
 
-## 7. Evaluation Metrics
+### Installation
 
-The model's success will be measured by:
+```bash
+# Clone the repository
+git clone https://github.com/tyrandall28/fantasy-football-predictions.git
+cd fantasy-football-predictor
 
-* **Predictive Accuracy of Points:**
-    * Mean Absolute Error (MAE) or Root Mean Squared Error (RMSE) between predicted and actual fantasy points for the 2024 season.
-* **Ranking Accuracy:**
-    * Spearman's Rank Correlation Coefficient or Kendall's Tau to compare the model's top 100 player rankings against actual 2024 end-of-season rankings.
-    * Hit Rate within Tiers (e.g., percentage of model's predicted top 10/25/50 players that actually finished in the top 10/25/50).
-* **Benchmarking:** All metrics will be compared against the predictive accuracy of ESPN's pre-season rankings for the 2024 season.
+# Install dependencies
+pip install -r requirements.txt
+```
 
-## 8. Skills Showcased
+### Usage
 
-This project aims to clearly demonstrate fundamentals of a machine learning project lifecycle:
-* Problem Definition & Scoping
-* Data Collection and Preprocessing Considerations
-* Thoughtful Feature Engineering
-* Model Selection and Training (Regression)
-* Prediction on New Data
-* Robust Evaluation against a Clear Benchmark
-* Clear Documentation and Code Structure in Python
+```python
+from src.data.data_loader import load_and_clean_data
+from src.features.feature_engineering import FantasyFeatureEngineer
+from src.models.train import train_best_model
+
+# Load and prepare data
+data = load_and_clean_data([2020, 2021, 2022, 2023])
+
+# Engineer features
+feature_engineer = FantasyFeatureEngineer()
+features = feature_engineer.create_training_features(data)
+
+# Train and compare models
+best_model, results = train_best_model(X, y)
+
+# Make predictions
+predictions = best_model.predict(X_new)
+```
+
+### Configuration-Driven Approach
+
+```yaml
+# config/config.yaml
+model:
+  random_forest:
+    n_estimators: 500
+    max_depth: 10
+    random_state: 42
+
+data:
+  seasons_for_training: [2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023]
+  test_size: 0.2
+  n_lag_seasons: 3
+
+features:
+  stats_to_lag: ["age", "games", "ppr_fantasy_points", "rush_yards", ...]
+```
+
+## Advanced Features
+
+### 1. Sophisticated Feature Engineering
+- **Lagged Statistics**: Multi-season historical performance (S-1, S-2, S-3)
+- **Derived Metrics**: Per-game averages, efficiency rates, catch rates
+- **Trend Analysis**: Year-over-year changes and momentum indicators
+- **Aggregate Features**: Multi-season averages, volatility measures
+- **Position-Specific Features**: Tailored features for QB, RB, WR, TE
+
+### 2. Multi-Model Architecture
+```python
+# Automated model comparison
+comparison = ModelComparison()
+results = comparison.train_all_models(X, y, 
+    models=['linear_regression', 'random_forest', 'xgboost', 'gradient_boosting'])
+best_model = comparison.get_best_model()
+```
+
+### 3. Professional Code Practices
+- **Type Hints**: Full type annotation for better code clarity
+- **Logging**: Comprehensive logging throughout the pipeline
+- **Error Handling**: Graceful error handling and validation
+- **Documentation**: Extensive docstrings and examples
+- **Modular Design**: Clean separation of concerns
+
+## Key Insights
+
+### The Linear Regression Surprise
+My analysis revealed that **Linear Regression significantly outperformed complex ensemble methods**:
+
+- **75.36% Spearman correlation** vs 71.56% for XGBoost
+- Demonstrates that **feature engineering > algorithm complexity**
+- Validates the importance of domain knowledge in feature creation
+
+### Feature Importance Findings
+1. **Multi-season aggregates** (29.03% avg importance)
+2. **Lagged PPR points** (27.04% avg importance) 
+3. **Per-game averages** and **efficiency metrics**
+4. **Trend indicators** for momentum detection
+
+### Business vs Technical Optimization
+The model correctly identifies QBs as highest-scoring players but reveals the distinction between:
+- **Technical accuracy**: Predicting total points
+- **Draft strategy**: Considering positional scarcity and opportunity cost
+
+## Technical Implementation
+
+### Machine Learning Pipeline
+- Multi-model comparison framework with automated evaluation
+- Advanced feature engineering including lagged statistics, derived metrics, and trend analysis
+- Time series cross-validation with chronological train/test splits
+- Multiple ranking metrics for comprehensive performance assessment
+
+### Software Architecture
+- Modular project structure with clean separation of concerns
+- Configuration-driven approach with YAML parameter management
+- Comprehensive logging and error handling throughout pipeline
+- Full type annotation and documentation standards
+
+## Project Evolution
+
+This project currently represents a **V2.0 professional refactor** of an initial working model:
+
+- **V1.0**: Achieved competitive performance vs ESPN rankings
+- **V2.0**: Complete restructure for production-ready, maintainable code
+- **Future**: Position-specific models, advanced features, API deployment
+
+## Future Work & Experiments
+
+### Priority Experiments
+1. **Time Window Optimization**: Investigate optimal training window lengths (e.g., 3-year vs 10-year historical data). Initial analysis suggests longer windows may significantly outperform recent data due to statistical power vs recency trade-offs. Big picture: do player point trends change enough over time as the game evolves to make the historical data no longer as useful to include in the model training? (Think how teams would heavily lean on a single workhorse RB in the late 2000s vs how teams now routinely carry 2-3 RBs who share the workload. This may have an effect on the model accuracy for predictions today)
+
+2. **Position-Specific Models**: Train separate models for QB, RB, WR, TE to capture position-specific performance patterns.
+
+3. **Advanced Feature Engineering**: Incorporate team context, coaching changes, and market share metrics.
+
+## Methodology
+
+### Data Strategy
+- **Training Data**: Historical seasons (2013-2023) based on actual performance
+- **Prediction Pool**: ESPN's 2024 preseason rankings (avoiding expert bias in training)
+- **Evaluation**: Compare 2024 predictions against actual season outcomes
+
+### Model Selection Criteria
+1. **Spearman Correlation**: Primary metric for ranking accuracy
+2. **Mean Absolute Error**: Point prediction accuracy
+3. **R² Score**: Variance explanation capability
+4. **Cross-Validation**: Generalization assessment
+
+---
+
+*Built with Python, scikit-learn, XGBoost, and professional ML engineering practices.*
