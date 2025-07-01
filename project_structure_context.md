@@ -1,4 +1,5 @@
 # Professional ML Project Structure Guide
+This doc serves as a guide for LLM model context.
 
 ## Project Directory Structure
 ```
