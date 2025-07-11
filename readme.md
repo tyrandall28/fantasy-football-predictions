@@ -84,4 +84,4 @@ This project aims to clearly demonstrate fundamentals of a machine learning proj
 
 ## 9. Next Steps
 * **Refactor the project structure:** The refactor branch contains a more professional structure with config and YAML files. When testing is complete, will submit a PR to merge to main.
-* **V2.0:** The refactor branch also contains a thorough roadmap for the next iteration of the model in `v2.0_roadmap.md`
+* **V2.0:** A thorough roadmap for the next iteration of the model can be found in `v2.0_roadmap.md`.
