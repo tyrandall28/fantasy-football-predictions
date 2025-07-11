@@ -2,7 +2,7 @@
 
 ## 1. Project Goal
 
-The primary goal of this project is to develop a machine learning model that predicts and ranks the top 100 fantasy football players (PPR scoring) for the 2024 NFL season. The aim is to achieve a higher predictive accuracy than ESPN's pre-season top 300 player rankings when compared against the actual performance outcomes of the 2024 season.
+The primary goal of this project is to develop a machine learning model that predicts and ranks the top 100 fantasy football players (PPR scoring) for the 2024 NFL season. The aim is to achieve a higher predictive accuracy than ESPN's pre-season top 300 player rankings when compared against the actual performance outcomes of the 2024 season. This model will then be utilized to predict future seasons.
 
 ## 2. Core Concept & Methodology
 
